@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpine TODO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .bg-dimmed {
+      background-color: rgb(252, 252, 252);
+    }
+  </style>
+  <script defer src="https://unpkg.com/@alpinejs/persist@3.4.2/dist/cdn.min.js"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.4.2/dist/cdn.min.js"></script>
+</head>
+
+<body>
+  <section class="row">
+    <div class="col-md-6 mx-auto bg-warning py-5 px-2" x-data="{
+      inputText: '',
+      hoverIndex: -1,
+      todoList: $persist([
+        {text: 'Learn Alpine JS', isComplete: true},
+        {text: 'Be a Billionaire', isComplete: false},
+      ]),
+      addTodo() {
+        if (this.inputText.length)
+          this.todoList.push({text: this.inputText, isComplete: false});
+        this.inputText = '';
+      },
+      removeTodo(index) {
+        this.todoList.splice(index, 1);
+      }
+  }">
+      <h1 class="display-4 text-center text-primary text-uppercase">Todo List</h1>
+
+      <div class="d-flex m-4">
+        <input type="text" class="form-control py-2" placeholder="Enter text" x-model="inputText"
+          x-on:keyup.enter="addTodo">
+        <button type="button" class="btn btn-primary" x-on:click="addTodo"><i class="fa fa-add"></i></button>
+      </div>
+
+      <ul class="list-unstyled px-4">
+        <template x-for="(todo, index) in todoList">
+
+          <li class="mb-2 border rounded-1" x-bind:class="{
+            'border-success bg-success text-white': todo.isComplete,
+            'bg-dimmed text-dark border-warning': !todo.isComplete
+          }">
+
+            <label class="d-flex px-2 py-3 user-select-none align-items-center" style="cursor: pointer;">
+              <input class="ms-2 me-3" type="checkbox" x-model="todo.isComplete">
+              <span x-text="todo.text" class="flex-fill"
+                x-bind:class="{'text-decoration-line-through': todo.isComplete}"></span>
+              <button type="button" class="btn btn-danger btn-sm" x-on:click="removeTodo(index)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </label>
+
+          </li>
+
+        </template>
+      </ul>
+
+    </div>
+  </section>
+</body>
+
+</html>
